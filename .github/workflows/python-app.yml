@@ -1,4 +1,4 @@
-name: Django CI/CD
+name: Django CI
 
 on:
   push:
@@ -7,39 +7,37 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  build-and-deploy:
+
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [3.12.2]
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
-        
+          python-version: '3.12.2'  # Remplacez par votre version Python souhaitée
+
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest
-        
-      - name: Run Tests
+
+
+      - name: Publish
         run: |
-          python manage.py test
-        
-      - name: Install lftp
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y lftp
-      
-      - name: Deploy to Server via FTP
-        run: |
-            lftp -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ftp://app.gradasbl.org <<EOF
-            mirror -R ./ /home/pftckq/public_html/
-            bye
-            EOF
-            
+          echo -e "${{ secrets.SSH_PRIVATE_KEY }}" > __TEMP_INPUT_KEY_FILE
+          chmod 600 __TEMP_INPUT_KEY_FILE
+
+          ssh -o StrictHostKeyChecking=no -i __TEMP_INPUT_KEY_FILE -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_USER }}"@"${{ secrets.SSH_HOST }}" "sudo rm -rf /home/pftckq/public_html/*"
+
+          scp -o StrictHostKeyChecking=no -i __TEMP_INPUT_KEY_FILE -P "${{ secrets.SSH_PORT }}" -r . "${{ secrets.SSH_USER }}"@"${{ secrets.SSH_HOST }}":"/home/pftckq/public_html/"
+
+          ssh -o StrictHostKeyChecking=no -i __TEMP_INPUT_KEY_FILE -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_USER }}"@"${{ secrets.SSH_HOST }}" "cd /home/pftckq/public_html/ && python -m pip install -r requirements.txt"
+
+          ssh -o StrictHostKeyChecking=no -i __TEMP_INPUT_KEY_FILE -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_USER }}"@"${{ secrets.SSH_HOST }}" "sudo systemctl restart your_gunicorn_service"
+
+          rm __TEMP_INPUT_KEY_FILE
