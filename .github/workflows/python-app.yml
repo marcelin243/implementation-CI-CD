@@ -38,7 +38,8 @@ jobs:
       
       - name: Deploy to Server via FTP
         run: |
-          lftp -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ftp://app.gradasbl.org <<EOF
-          mirror -R ./ /home/pftckq/public_html/
-          bye
-          EOF
+            lftp -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ftp://app.gradasbl.org <<EOF
+            mirror -R ./ /home/pftckq/public_html/
+            bye
+            EOF
+            
