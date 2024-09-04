@@ -1,7 +1,7 @@
 from django.db import models
 
 # MODEL contr_moyen_payement_communes
-# ==========================
+# =================
 class utilisateur(models.Model):
     id=models.AutoField(primary_key=True,db_column='id')
     nom=models.CharField(max_length=255,null=False,db_column="nom")
