@@ -40,3 +40,4 @@ jobs:
     - name: Deploy to Server
       run: |
         rsync -avz --delete ./ pftckq@app.gradasbl.org:/home/pftckq/public_html/
+ 
