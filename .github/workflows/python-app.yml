@@ -1,4 +1,4 @@
-name: Django CI
+name: Django CI/CD
 
 on:
   push:
@@ -21,6 +21,7 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
+        
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
@@ -28,6 +29,16 @@ jobs:
         pip install selenium
         pip install webdriver-manager
         pip install pytest
+        
     - name: Run Tests
       run: |
         python manage.py test
+        
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Deploy to Server
+      run: |
+        rsync -avz --delete ./ pftckq@app.gradasbl.org:/home/pftckq/public_html/
