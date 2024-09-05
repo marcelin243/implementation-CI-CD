@@ -26,5 +26,5 @@ Résumé de l'Implémentation d'un Pipeline CI/CD
 Automatisation des tests et du déploiement, ce qui réduit les risques d'erreurs humaines.
 Accélération du processus de développement en permettant des déploiements fréquents et fiables.
 
-5. Conclusion
+5. Conclusion :
 L'implémentation d'un pipeline CI/CD avec GitHub Actions pour une application Django facilite la gestion des tests et du déploiement, garantissant une livraison continue et une meilleure qualité de code. Cela permet aux équipes de se concentrer sur le développement plutôt que sur les processus manuels.
