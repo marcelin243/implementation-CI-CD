@@ -41,7 +41,7 @@ jobs:
       - name: Add known hosts
         run: |
           mkdir -p ~/.ssh
-          echo "dev.hpgp6881.mywhc.ca:27 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEVeUqD+taHDeMNtEKHgz0z2xeGv5f44JAqnsTiPmGemoOV9ImZq+TyuInpk9uooWzrRs16BetFae3N4/A9uWSo=" >> ~/.ssh/known_hosts
+          echo "[dev.hpgp6881.mywhc.ca]:27 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEVeUqD+taHDeMNtEKHgz0z2xeGv5f44JAqnsTiPmGemoOV9ImZq+TyuInpk9uooWzrRs16BetFae3N4/A9uWSo=" >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
       - name: Install rsync
