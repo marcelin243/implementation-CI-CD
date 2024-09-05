@@ -46,4 +46,4 @@ jobs:
 
       - name: Deploy to Server
         run: |
-          rsync -avz --delete ./ pftckq@app.gradasbl.org:/home/pftckq/public_html/
+            rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./ pftckq@app.gradasbl.org:/home/pftckq/public_html/
