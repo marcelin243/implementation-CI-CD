@@ -46,4 +46,4 @@ jobs:
 
       - name: Deploy to Server
         run: |
-          rsync -avz --delete ./ hpgp6881@dev.hpgp6881.mywhc.ca:/home/hpgp6881/dev.hpgp6881.mywhc.ca/
+            rsync -avz --delete -e 'ssh -p 27' ./ hpgp6881@dev.hpgp6881.mywhc.ca:/home/hpgp6881/dev.hpgp6881.mywhc.ca/
