@@ -41,9 +41,12 @@ jobs:
       - name: Add known hosts
         run: |
           mkdir -p ~/.ssh
-          echo "[dev.hpgp6881.mywhc.ca]:27,[144.217.129.53]:27 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEVeUqD+taHDeMNtEKHgz0z2xeGv5f44JAqnsTiPmGemoOV9ImZq+TyuInpk9uooWzrRs16BetFae3N4/A9uWSo=" >> ~/.ssh/known_hosts
+          echo "dev.hpgp6881.mywhc.ca:27 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEVeUqD+taHDeMNtEKHgz0z2xeGv5f44JAqnsTiPmGemoOV9ImZq+TyuInpk9uooWzrRs16BetFae3N4/A9uWSo=" >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
+
+      - name: Install rsync
+        run: sudo apt-get install -y rsync
 
       - name: Deploy to Server
         run: |
-            rsync -avz --delete -e 'ssh -p 27' ./ hpgp6881@dev.hpgp6881.mywhc.ca:/home/hpgp6881/dev.hpgp6881.mywhc.ca/
+          rsync -avz --delete -e 'ssh -p 27' ./ hpgp6881@dev.hpgp6881.mywhc.ca:/home/hpgp6881/dev.hpgp6881.mywhc.ca/
