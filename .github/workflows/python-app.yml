@@ -46,4 +46,4 @@ jobs:
 
       - name: Deploy to Server
         run: |
-          scp -P 27 -r ./ hpgp6881@dev.hpgp6881.mywhc.ca:/home/hpgp6881/dev.hpgp6881.mywhc.ca/
+            scp -P 27 -r ${GITHUB_WORKSPACE}/ hpgp6881@dev.hpgp6881.mywhc.ca:/home/hpgp6881/dev.hpgp6881.mywhc.ca/
