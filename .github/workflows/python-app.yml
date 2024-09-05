@@ -41,9 +41,9 @@ jobs:
       - name: Add known hosts
         run: |
           mkdir -p ~/.ssh
-          echo "app.gradasbl.org,194.163.163.254 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBAnScucXEfokqwNlUGjjyRFnyl0tnKyBJP4UQCL5Xkyhmr9nddQw8fFjnza3B7nS5x44Q8YlctmHMlmT4agOyKk=" >> ~/.ssh/known_hosts
+          echo "[dev.hpgp6881.mywhc.ca]:27,[144.217.129.53]:27 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEVeUqD+taHDeMNtEKHgz0z2xeGv5f44JAqnsTiPmGemoOV9ImZq+TyuInpk9uooWzrRs16BetFae3N4/A9uWSo=" >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
       - name: Deploy to Server
         run: |
-            rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no -o BatchMode=yes" ./ pftckq@app.gradasbl.org:/home/pftckq/public_html/
+          rsync -avz --delete ./ pftckq@app.gradasbl.org:/home/pftckq/public_html/
