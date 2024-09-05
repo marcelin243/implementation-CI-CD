@@ -1,33 +1,49 @@
-name: Deploy to Subdomain via FTP
+name: Django-CI/CD
 
 on:
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.12.2]
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
         with:
-          python-version: '3.12.2'  # Spécifiez votre version de Python ici
-
-      - name: Install dependencies
+          python-version: ${{ matrix.python-version }}
+        
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest
-
-      - name: Upload files via FTP
-        uses: SamKirkland/FTP-Upload@v1.1.0
+        
+      - name: Run Tests
+        run: |
+          python manage.py test
+        
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
         with:
-          server: app.gradasbl.org
-          username: pftckq  # Votre nom d'utilisateur FTP
-          password: ${{ secrets.FTP_PASSWORD }}  # Le mot de passe FTP
-          local-dir: .
-          server-dir: /home/pftckq/app.gradasbl.org/  # Chemin vers votre sous-domaine
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add known hosts
+        run: |
+          mkdir -p ~/.ssh
+          echo "app.gradasbl.org,194.163.163.254 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBAnScucXEfokqwNlUGjjyRFnyl0tnKyBJP4UQCL5Xkyhmr9nddQw8fFjnza3B7nS5x44Q8YlctmHMlmT4agOyKk=" >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Deploy to Server
+        run: |
+            rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no -o BatchMode=yes" ./ pftckq@app.gradasbl.org:/home/pftckq/public_html/
